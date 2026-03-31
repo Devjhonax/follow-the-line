@@ -1,3 +1,5 @@
+import "dotenv/config"
+
 import { useState } from 'react'
 import Botao from '../Botao'
 import Timer from '../Timer'
@@ -29,7 +31,7 @@ const Cardtopic = ({ title, sessions, id, onTopic }: CardtopicProps) => {
 
     setIniciando(true)
     try {
-      const resp = await fetch(`http://localhost:3000/topics/${id}/sessions`, {
+      const resp = await fetch( process.env.BACK_URL +`/topics/${id}/sessions`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
@@ -71,7 +73,7 @@ const Cardtopic = ({ title, sessions, id, onTopic }: CardtopicProps) => {
     evt.preventDefault()
     if (!window.confirm(`Deletar "${title}"? Todas as sessões serão removidas.`)) return
     try {
-      const resp = await fetch(`http://localhost:3000/topics/${id}`, {
+      const resp = await fetch(process.env.BACK_URL+`/topics/${id}`, {
         method: 'DELETE',
         credentials: 'include',
       })

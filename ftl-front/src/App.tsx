@@ -1,3 +1,5 @@
+import 'dotenv/config'
+
 import { useState, useEffect } from 'react'
 import './App.css'
 import Login from './componentes/Login/Login'
@@ -12,7 +14,7 @@ function App() {
   useEffect(() => {
     async function verificarSessao() {
       try {
-        const res = await fetch('http://localhost:3000/auth/me', {
+        const res = await fetch(process.env.bACK_URL +`/auth/me`, {
           credentials: 'include',
         })
         if (res.ok) {

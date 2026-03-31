@@ -1,5 +1,3 @@
-// ─── Tipos globais da aplicação ───────────────────────────────────────────────
-
 export interface Usuario {
   id: string
   username: string

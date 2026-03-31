@@ -1,3 +1,5 @@
+import "dotenv/config"
+
 import { useEffect, useState } from 'react'
 import ModalReflexao from '../Modal'
 import type { Sessao } from '../../types'
@@ -21,7 +23,7 @@ const Sessoes = ({ topicoId, title }: SessoesProps) => {
 
   const buscarSessoes = async () => {
     try {
-      const res = await fetch(`http://localhost:3000/topics/${topicoId}/sessions?limit=50`, {
+      const res = await fetch(process.env.BACK_URL + `/topics/${topicoId}/sessions?limit=50`, {
         credentials: 'include',
       })
       const { dados } = await res.json()
@@ -59,7 +61,6 @@ const Sessoes = ({ topicoId, title }: SessoesProps) => {
 
         {aberto && (
           <div className="sessoes__lista">
-            {/* Métricas */}
             <div className="sessoes__metricas">
               <div className="sessao-metrica">
                 <span className="sessao-metrica__valor">{formatarMinutos(totalPlanejado)}</span>
@@ -77,7 +78,6 @@ const Sessoes = ({ topicoId, title }: SessoesProps) => {
               </div>
             </div>
 
-            {/* Barra de eficiência */}
             <div className="sessoes__eficiencia-barra">
               <div className="sessoes__eficiencia-fill" style={{ width: `${Math.min(percentual, 100)}%` }} />
             </div>

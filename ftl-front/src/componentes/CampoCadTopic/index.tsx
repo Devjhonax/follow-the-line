@@ -1,3 +1,5 @@
+import "dotenv/config"
+
 import { useState } from 'react'
 import Botao from '../Botao'
 import CampoInput from '../CampoInput'
@@ -17,7 +19,7 @@ const CampoCadTopic = ({ onTopicAdicionado }: CampoCadTopicProps) => {
 
     setCarregando(true)
     try {
-      const resp = await fetch('http://localhost:3000/topics/', {
+      const resp = await fetch(process.env.BACK_URL +'/topics/', {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },

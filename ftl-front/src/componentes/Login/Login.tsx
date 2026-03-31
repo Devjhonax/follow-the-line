@@ -1,3 +1,5 @@
+import "dotenv/config"
+
 import { useState } from 'react'
 import CampoInput from '../CampoInput'
 import Botao from '../Botao'
@@ -21,7 +23,7 @@ const Login = ({ aoLogar }: LoginProps) => {
     setCarregando(true)
     setErro('')
     try {
-      const res = await fetch('http://localhost:3000/auth/register', {
+      const res = await fetch(process.env.BACK_URL+'/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: nome, password: senha }),
@@ -43,7 +45,7 @@ const Login = ({ aoLogar }: LoginProps) => {
     setCarregando(true)
     setErro('')
     try {
-      const res = await fetch('http://localhost:3000/auth/login', {
+      const res = await fetch(process.env.BACK_URL+'/auth/login', {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },

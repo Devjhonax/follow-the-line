@@ -1,3 +1,5 @@
+import "dotenv/config"
+
 import { useState } from 'react'
 import Botao from '../Botao'
 import './Modal.css'
@@ -21,7 +23,7 @@ const ModalReflexao = ({ sessaoId, onFechar, onSalvo }: ModalReflexaoProps) => {
     setSalvando(true)
     setErro('')
     try {
-      const res = await fetch(`http://localhost:3000/sessions/${sessaoId}/reflection`, {
+      const res = await fetch(process.env.BACK_URL+`/sessions/${sessaoId}/reflection`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
@@ -72,7 +74,7 @@ const ModalReflexao = ({ sessaoId, onFechar, onSalvo }: ModalReflexaoProps) => {
             />
           </div>
           <div className="modal__campo">
-            <label>🔁 O que revisar</label>
+            <label>O que revisar</label>
             <textarea
               value={review}
               onChange={(e) => setReview(e.target.value)}

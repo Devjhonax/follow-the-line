@@ -1,3 +1,5 @@
+import "dotenv/config"
+
 import { useEffect, useState } from 'react'
 import Cardtopic from '../Cardtopic'
 import CampoCadTopic from '../CampoCadTopic'
@@ -17,7 +19,7 @@ const Dashboard = ({ username, aoSair }: DashboardProps) => {
 
   const buscarTopicos = async () => {
     try {
-      const res = await fetch('http://localhost:3000/topics?limit=50', {
+      const res = await fetch(process.env.BACK_URL+'/topics?limit=50', {
         credentials: 'include',
       })
       if (res.ok) {
