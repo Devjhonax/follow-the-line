@@ -1,0 +1,44 @@
+.cad-topico {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+}
+
+.cad-topico__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cad-topico__label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+
+.cad-topico__icon {
+  width: 28px;
+  height: 28px;
+  background: rgba(108,92,231,0.15);
+  color: var(--accent-2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.cad-topico__row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.cad-topico__row .campo-texto { flex: 1; }
+.cad-topico__btn { padding: 12px 20px; height: 44px; }
