@@ -13,9 +13,20 @@ import errorHandler from './middlewares/errorHandler.js'
 const app = express()
 
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+
+    if (
+      origin.includes("vercel.app") ||
+      origin === "http://localhost:5173"
+    ) {
+      return callback(null, true);
+    }
+
+    return callback(new Error("Not allowed by CORS"));
+  },
   credentials: true,
-}))
+}));
 app.use(express.json())
 app.use(cookieParser())
 
@@ -24,7 +35,7 @@ app.use('/topics', topicRoutes)
 app.use('/sessions', sessionRoutes)
 app.use('/topics', reflectionRoutes)
 
-app.get('/', (req, res) => res.status(200).json({message: "Welcome to api"}))
+app.get('/', (req, res) => res.status(200).json({ message: "Welcome to api" }))
 
 app.use(errorHandler)
 

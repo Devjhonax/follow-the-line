@@ -1,46 +1,52 @@
-import { useState, useEffect } from 'react'
-import './App.css'
-import Login from './componentes/Login/Login'
-import Dashboard from './componentes/Dashboard'
-import type { Usuario } from './types'
+import { useState, useEffect } from "react";
+import "./App.css";
+import Login from "./componentes/Login/Login";
+import Dashboard from "./componentes/Dashboard";
+import type { Usuario } from "./types";
 
 function App() {
-  const [logado, setLogado] = useState(false)
-  const [usuario, setUsuario] = useState<Usuario | null>(null)
-  const [verificando, setVerificando] = useState(true)
+  const [logado, setLogado] = useState(false);
+  const [usuario, setUsuario] = useState<Usuario | null>(null);
+  const [verificando, setVerificando] = useState(true);
 
   useEffect(() => {
     async function verificarSessao() {
       try {
-        const res = await fetch(import.meta.env.VITE_BACK_URL +`/auth/me`, {
-          credentials: 'include',
-        })
+        const res = await fetch(import.meta.env.VITE_BACK_URL + `/auth/me`, {
+          credentials: "include",
+        });
+
+        
+
         if (res.ok) {
-          const { usuario } = await res.json()
-          setUsuario(usuario)
-          setLogado(true)
+          const { usuario } = await res.json();
+          console.log("aaaaaaaaaa");
+        console.log("ENV:", import.meta.env);
+        console.log("API:", import.meta.env.VITE_BACK_URL);
+          setUsuario(usuario);
+          setLogado(true);
         }
       } catch {
       } finally {
-        setVerificando(false)
+        setVerificando(false);
       }
     }
-    verificarSessao()
-  }, [])
+    verificarSessao();
+  }, []);
 
   const aoLogar = (usr: Usuario) => {
-    setUsuario(usr)
-    setLogado(true)
-  }
+    setUsuario(usr);
+    setLogado(true);
+  };
 
   const aoSair = async () => {
-    await fetch(import.meta.env.VITE_BACK_URL+'/auth/logout', {
-      method: 'POST',
-      credentials: 'include',
-    }).catch(() => {})
-    setLogado(false)
-    setUsuario(null)
-  }
+    await fetch(import.meta.env.VITE_BACK_URL + "/auth/logout", {
+      method: "POST",
+      credentials: "include",
+    }).catch(() => {});
+    setLogado(false);
+    setUsuario(null);
+  };
 
   if (verificando) {
     return (
@@ -48,12 +54,12 @@ function App() {
         <div className="splash-logo">FTL</div>
         <div className="splash-dot" />
       </div>
-    )
+    );
   }
 
-  if (!logado) return <Login aoLogar={aoLogar} />
+  if (!logado) return <Login aoLogar={aoLogar} />;
 
-  return <Dashboard username={usuario?.username ?? ''} aoSair={aoSair} />
+  return <Dashboard username={usuario?.username ?? ""} aoSair={aoSair} />;
 }
 
-export default App
+export default App;
