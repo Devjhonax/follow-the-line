@@ -37,7 +37,7 @@ const Timer = ({ sessaoId, plannedTime, onEncerrada }: TimerProps) => {
     setEncerrando(true)
     const tempoRealMinutos = Math.max(1, Math.round(segundos / 60))
     try {
-      const res = await fetch(process.env.BACK_URL +`/sessions/${sessaoId}/end`, {
+      const res = await fetch(import.meta.env.VITE_BACK_URL +`/sessions/${sessaoId}/end`, {
         method: 'PUT',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },

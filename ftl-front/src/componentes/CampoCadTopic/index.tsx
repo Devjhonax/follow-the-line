@@ -19,7 +19,7 @@ const CampoCadTopic = ({ onTopicAdicionado }: CampoCadTopicProps) => {
 
     setCarregando(true)
     try {
-      const resp = await fetch(process.env.BACK_URL +'/topics/', {
+      const resp = await fetch(import.meta.env.VITE_BACK_URL +'/topics/', {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },

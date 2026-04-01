@@ -19,7 +19,7 @@ const Dashboard = ({ username, aoSair }: DashboardProps) => {
 
   const buscarTopicos = async () => {
     try {
-      const res = await fetch(process.env.BACK_URL+'/topics?limit=50', {
+      const res = await fetch(import.meta.env.VITE_BACK_URL +'/topics?limit=50', {
         credentials: 'include',
       })
       if (res.ok) {

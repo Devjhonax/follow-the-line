@@ -31,7 +31,7 @@ const Cardtopic = ({ title, sessions, id, onTopic }: CardtopicProps) => {
 
     setIniciando(true)
     try {
-      const resp = await fetch( process.env.BACK_URL +`/topics/${id}/sessions`, {
+      const resp = await fetch( import.meta.env.VITE_BACK_URL +`/topics/${id}/sessions`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
@@ -73,7 +73,7 @@ const Cardtopic = ({ title, sessions, id, onTopic }: CardtopicProps) => {
     evt.preventDefault()
     if (!window.confirm(`Deletar "${title}"? Todas as sessões serão removidas.`)) return
     try {
-      const resp = await fetch(process.env.BACK_URL+`/topics/${id}`, {
+      const resp = await fetch(import.meta.env.VITE_BACK_URL +`/topics/${id}`, {
         method: 'DELETE',
         credentials: 'include',
       })

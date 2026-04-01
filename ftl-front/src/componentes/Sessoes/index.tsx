@@ -23,7 +23,7 @@ const Sessoes = ({ topicoId, title }: SessoesProps) => {
 
   const buscarSessoes = async () => {
     try {
-      const res = await fetch(process.env.BACK_URL + `/topics/${topicoId}/sessions?limit=50`, {
+      const res = await fetch(import.meta.env.VITE_BACK_URL + `/topics/${topicoId}/sessions?limit=50`, {
         credentials: 'include',
       })
       const { dados } = await res.json()

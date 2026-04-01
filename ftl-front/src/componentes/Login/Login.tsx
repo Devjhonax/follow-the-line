@@ -23,7 +23,7 @@ const Login = ({ aoLogar }: LoginProps) => {
     setCarregando(true)
     setErro('')
     try {
-      const res = await fetch(process.env.BACK_URL+'/auth/register', {
+      const res = await fetch(import.meta.env.VITE_BACK_URL +'/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: nome, password: senha }),
@@ -45,7 +45,7 @@ const Login = ({ aoLogar }: LoginProps) => {
     setCarregando(true)
     setErro('')
     try {
-      const res = await fetch(process.env.BACK_URL+'/auth/login', {
+      const res = await fetch(import.meta.env.VITE_BACK_URL +'/auth/login', {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },

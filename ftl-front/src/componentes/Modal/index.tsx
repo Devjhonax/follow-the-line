@@ -23,7 +23,7 @@ const ModalReflexao = ({ sessaoId, onFechar, onSalvo }: ModalReflexaoProps) => {
     setSalvando(true)
     setErro('')
     try {
-      const res = await fetch(process.env.BACK_URL+`/sessions/${sessaoId}/reflection`, {
+      const res = await fetch(import.meta.env.VITE_BACK_URL +`/sessions/${sessaoId}/reflection`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },

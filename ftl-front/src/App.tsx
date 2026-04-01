@@ -14,7 +14,7 @@ function App() {
   useEffect(() => {
     async function verificarSessao() {
       try {
-        const res = await fetch(process.env.bACK_URL +`/auth/me`, {
+        const res = await fetch(import.meta.env.VITE_BACK_URL +`/auth/me`, {
           credentials: 'include',
         })
         if (res.ok) {
@@ -36,7 +36,7 @@ function App() {
   }
 
   const aoSair = async () => {
-    await fetch('http://localhost:3000/auth/logout', {
+    await fetch(import.meta.env.VITE_BACK_URL+'/auth/logout', {
       method: 'POST',
       credentials: 'include',
     }).catch(() => {})
