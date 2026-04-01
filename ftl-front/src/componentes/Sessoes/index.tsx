@@ -1,5 +1,3 @@
-import "dotenv/config"
-
 import { useEffect, useState } from 'react'
 import ModalReflexao from '../Modal'
 import type { Sessao } from '../../types'

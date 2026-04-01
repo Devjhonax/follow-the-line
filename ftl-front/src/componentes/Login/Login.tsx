@@ -1,5 +1,3 @@
-import "dotenv/config"
-
 import { useState } from 'react'
 import CampoInput from '../CampoInput'
 import Botao from '../Botao'

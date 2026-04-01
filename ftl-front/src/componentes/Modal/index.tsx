@@ -1,5 +1,3 @@
-import "dotenv/config"
-
 import { useState } from 'react'
 import Botao from '../Botao'
 import './Modal.css'

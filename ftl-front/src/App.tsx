@@ -1,5 +1,3 @@
-import 'dotenv/config'
-
 import { useState, useEffect } from 'react'
 import './App.css'
 import Login from './componentes/Login/Login'

@@ -1,5 +1,3 @@
-import "dotenv/config"
-
 import { useState, useEffect, useRef } from 'react'
 import Botao from '../Botao'
 import './Timer.css'

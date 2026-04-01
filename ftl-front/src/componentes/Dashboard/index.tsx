@@ -1,5 +1,3 @@
-import "dotenv/config"
-
 import { useEffect, useState } from 'react'
 import Cardtopic from '../Cardtopic'
 import CampoCadTopic from '../CampoCadTopic'
