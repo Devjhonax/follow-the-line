@@ -1,243 +1,108 @@
-# 📚 Follow The Line — API
+📚 Follow The Line
 
-API RESTful para sistema de acompanhamento de estudos. Permite criar tópicos, registrar sessões, responder reflexões e visualizar desempenho.
+Sistema de acompanhamento de estudos com cronômetro, reflexões e análise de desempenho.
 
----
 
-## 🛠️ Tecnologias
+Visão geral
+Follow The Line é uma aplicação web fullstack para estudantes que querem registrar e acompanhar suas sessões de estudo. Você cria tópicos (ex: Inglês, Python, Matemática), inicia sessões cronometradas, registra quanto tempo realmente estudou e responde reflexões ao final — tudo isso visualizado em um histórico com métricas de eficiência.
 
-- Node.js + Express
-- Prisma ORM + PostgreSQL
-- JWT (header + cookie)
-- Bcrypt
-- dotenv / CORS
+Stack
+CamadaTecnologiaFrontendReact 19 + TypeScript + ViteBackendNode.js + Express + Prisma ORMBanco de dadosPostgreSQLAutenticaçãoJWT (header + cookie httpOnly)EstiloCSS Modules com design system em variáveis
 
----
+Estrutura do monorepo
+follow-the-line/
+├── backend/                   # API RESTful
+│   ├── prisma/
+│   │   └── schema.prisma      # Models: User, Topic, Session, Reflection
+│   ├── src/
+│   │   ├── controllers/       # Recebe req/res, delega ao service
+│   │   ├── services/          # Lógica de negócio e acesso ao banco
+│   │   ├── routes/            # Definição de rotas
+│   │   ├── middlewares/       # authenticate.js, errorHandler.js
+│   │   ├── prisma/            # Singleton do PrismaClient
+│   │   ├── utils/             # AppError, pagination
+│   │   ├── app.js
+│   │   └── server.js
+│   └── .env.example
+│
+└── frontend/                  # SPA React + TypeScript
+    ├── src/
+    │   ├── componentes/
+    │   │   ├── Login/         # Tela de login e cadastro
+    │   │   ├── Dashboard/     # Tela principal com abas
+    │   │   ├── Cardtopic/     # Card de tópico com formulário de sessão
+    │   │   ├── Timer/         # Cronômetro ao vivo da sessão
+    │   │   ├── Sessoes/       # Histórico expansível por tópico
+    │   │   ├── Modal/         # Modal de reflexão pós-sessão
+    │   │   ├── CampoCadTopic/ # Formulário de novo tópico
+    │   │   ├── CampoInput/    # Input reutilizável
+    │   │   └── Botao/         # Botão reutilizável com variantes
+    │   ├── types.ts           # Interfaces TypeScript globais
+    │   ├── App.tsx
+    │   └── main.tsx
+    └── index.html
 
-## 🚀 Como rodar
+Como rodar
+Pré-requisitos
 
-### 1. Instalar dependências
-```bash
-npm install
-```
+Node.js 18+
+PostgreSQL rodando localmente (ou via Docker)
 
-### 2. Configurar variáveis de ambiente
-```bash
+Backend
+bashcd backend
 cp .env.example .env
-# Edite o .env com suas credenciais
-```
+# Edite .env com sua DATABASE_URL e JWT_SECRET
 
-### 3. Rodar migrations e gerar client Prisma
-```bash
+npm install
 npx prisma migrate dev --name init
-```
-
-### 4. Iniciar o servidor
-```bash
-# Desenvolvimento
 npm run dev
+O servidor sobe em http://localhost:3000.
+Frontend
+bashcd frontend
+npm install
+npm run dev
+A aplicação abre em http://localhost:5173.
 
-# Produção
-npm start
-```
+Atenção: o frontend espera a API em http://localhost:3000. Certifique-se de que o backend está rodando antes de abrir o frontend.
 
----
 
-## 📁 Estrutura de pastas
+Variáveis de ambiente (backend)
+Copie .env.example e preencha:
+envDATABASE_URL=postgresql://user:password@localhost:5432/studytracker
+JWT_SECRET=sua_chave_secreta_aqui
+PORT=3000
+CLIENT_URL=http://localhost:5173
 
-```
-src/
-├── controllers/       # Recebe req/res, chama services
-│   ├── auth.controller.js
-│   ├── topic.controller.js
-│   ├── session.controller.js
-│   └── reflection.controller.js
-├── services/          # Lógica de negócio, acesso ao banco
-│   ├── auth.service.js
-│   ├── topic.service.js
-│   ├── session.service.js
-│   └── reflection.service.js
-├── routes/            # Definição de rotas e middlewares
-│   ├── auth.routes.js
-│   ├── topic.routes.js
-│   ├── session.routes.js
-│   └── reflection.routes.js
-├── middlewares/
-│   ├── authenticate.js   # Valida JWT
-│   └── errorHandler.js   # Handler global de erros
-├── prisma/
-│   └── client.js         # Singleton do PrismaClient
-├── utils/
-│   ├── AppError.js       # Classe de erro operacional
-│   └── pagination.js     # Helpers de paginação
-├── app.js
-└── server.js
-prisma/
-└── schema.prisma
-```
+Endpoints da API
+Autenticação
+MétodoRotaDescriçãoPOST/auth/registerCadastrar usuárioPOST/auth/loginLogin (retorna JWT no body e em cookie)GET/auth/meRetorna usuário logadoPOST/auth/logoutEncerra sessão (limpa cookie)
+Tópicos (requer JWT)
+MétodoRotaDescriçãoPOST/topicsCriar tópicoGET/topicsListar tópicos (paginado)GET/topics/:idBuscar tópico por IDDELETE/topics/:idDeletar tópicoGET/topics/:id/performanceMétricas de desempenho
+Sessões (requer JWT)
+MétodoRotaDescriçãoPOST/topics/:topicId/sessionsCriar sessãoGET/topics/:topicId/sessionsListar sessões do tópicoPUT/sessions/:id/endEncerrar sessão (registra tempo real)
+Reflexões (requer JWT)
+MétodoRotaDescriçãoPOST/sessions/:id/reflectionCriar reflexãoGET/sessions/:id/reflectionBuscar reflexão
 
----
+Fluxo principal
+Login / Cadastro
+       ↓
+   Dashboard
+   ├── Criar tópico
+   └── Iniciar sessão
+            ↓
+       Cronômetro ao vivo
+            ↓
+       Encerrar sessão  →  PUT /sessions/:id/end
+            ↓
+       Modal de reflexão  →  POST /sessions/:id/reflection
+            ↓
+   Aba Histórico  →  métricas por tópico
 
-## 🔐 Autenticação
+Regras de negócio
 
-O token JWT pode ser enviado de duas formas:
-
-**Header:**
-```
-Authorization: Bearer <token>
-```
-
-**Cookie** (definido automaticamente no login):
-```
-token=<token>
-```
-
----
-
-## 📡 Endpoints
-
-### Auth
-
-| Método | Rota             | Descrição         | Auth |
-|--------|------------------|-------------------|------|
-| POST   | /auth/register   | Cadastrar usuário | ❌   |
-| POST   | /auth/login      | Login             | ❌   |
-
-**POST /auth/register**
-```json
-{ "username": "joao", "password": "123456" }
-```
-
-**POST /auth/login**
-```json
-{ "username": "joao", "password": "123456" }
-```
-Retorna `token` JWT e dados do usuário.
-
----
-
-### Topics
-
-| Método | Rota                    | Descrição              | Auth |
-|--------|-------------------------|------------------------|------|
-| POST   | /topics                 | Criar tópico           | ✅   |
-| GET    | /topics                 | Listar tópicos         | ✅   |
-| GET    | /topics/:id             | Buscar tópico por ID   | ✅   |
-| DELETE | /topics/:id             | Deletar tópico         | ✅   |
-| GET    | /topics/:id/performance | Performance do tópico  | ✅   |
-
-**POST /topics**
-```json
-{ "name": "Inglês" }
-```
-
-**GET /topics** — suporta paginação:
-```
-GET /topics?page=1&limit=10
-```
-
----
-
-### Sessions
-
-| Método | Rota                          | Descrição                        | Auth |
-|--------|-------------------------------|----------------------------------|------|
-| POST   | /topics/:topicId/sessions     | Criar sessão                     | ✅   |
-| GET    | /topics/:topicId/sessions     | Listar sessões do tópico         | ✅   |
-| PUT    | /sessions/:id/end             | Encerrar sessão (definir tempo real) | ✅   |
-
-**POST /topics/:topicId/sessions**
-```json
-{ "plannedTime": 60 }
-```
-
-**PUT /sessions/:id/end**
-```json
-{ "realTime": 45 }
-```
-
----
-
-### Reflections
-
-| Método | Rota                       | Descrição              | Auth |
-|--------|----------------------------|------------------------|------|
-| POST   | /sessions/:id/reflection   | Criar reflexão         | ✅   |
-| GET    | /sessions/:id/reflection   | Buscar reflexão        | ✅   |
-
-**POST /sessions/:id/reflection**
-```json
-{
-  "learned": "Aprendi passado simples em inglês",
-  "difficulty": "Conjugações irregulares foram difíceis",
-  "review": "Preciso revisar os verbos irregulares"
-}
-```
-
----
-
-### Performance
-
-**GET /topics/:id/performance**
-
-Retorna análise completa do tópico:
-
-```json
-{
-  "topicId": "uuid",
-  "topicName": "Inglês",
-  "totalSessions": 5,
-  "completedSessions": 4,
-  "totalPlannedTime": 240,
-  "totalRealTime": 210,
-  "difference": -30,
-  "percentage": 87.5,
-  "reflections": [
-    {
-      "sessionId": "uuid",
-      "sessionDate": "2024-03-01T10:00:00.000Z",
-      "plannedTime": 60,
-      "realTime": 45,
-      "reflection": {
-        "learned": "...",
-        "difficulty": "...",
-        "review": "..."
-      }
-    }
-  ]
-}
-```
-
-> `percentage`: tempo real / tempo planejado × 100  
-> `difference`: tempo real − tempo planejado (negativo = estudou menos que o planejado)
-
----
-
-## ⚙️ Variáveis de ambiente
-
-| Variável     | Descrição                            | Exemplo                                              |
-|--------------|--------------------------------------|------------------------------------------------------|
-| DATABASE_URL | String de conexão PostgreSQL         | postgresql://user:pass@localhost:5432/studytracker   |
-| JWT_SECRET   | Segredo para assinar tokens JWT      | minha_chave_secreta                                  |
-| PORT         | Porta do servidor                    | 3000                                                 |
-| CLIENT_URL   | Origem permitida no CORS (opcional)  | http://localhost:5173                                |
-
----
-
-## 🧠 Regras de negócio
-
-- Usuário só acessa seus próprios tópicos (ownership verificado em todas as rotas)
-- Senha mínima de 6 caracteres, armazenada com bcrypt
-- Reflexão só pode ser criada após encerrar a sessão (`PUT /sessions/:id/end`)
-- Cada sessão só pode ter uma reflexão
-- Cada sessão só pode ser encerrada uma vez
-- Performance considera apenas sessões já encerradas (`realTime !== null`)
-
----
-
-## 🔒 Segurança
-
-- Todas as rotas (exceto `/auth`) requerem JWT válido
-- Token aceito via `Authorization: Bearer` ou cookie `httpOnly`
-- Erros de autenticação retornam `401`, acesso negado `403`
-- Erros operacionais retornam mensagens claras; erros inesperados retornam `500` sem expor stack trace
+Usuário só acessa seus próprios tópicos (ownership verificado em todas as rotas)
+Sessão só pode ser encerrada uma vez (realTime imutável após definido)
+Reflexão só pode ser criada em sessões já encerradas
+Cada sessão possui no máximo uma reflexão
+Métricas de performance consideram apenas sessões encerradas
+Senha mínima de 6 caracteres, armazenada com bcrypt
